@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "outDir": "dist", // where to put the TS files
+    "target": "ES6",
+    "moduleResolution": "node"
+  },
+  "include": ["src"] // which files to compile,
+}
