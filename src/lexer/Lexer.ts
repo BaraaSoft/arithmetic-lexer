@@ -12,16 +12,25 @@ import {
 } from './token';
 
 export interface ITransition<T> {
-  add(T): ITransition<T>;
+  add(...fromState: any[]): ITransition<T>;
+  at(state: any): ITransition<T>;
 }
 
-export class Transition<T extends ReturnType<typeof from>>
-  implements ITransition<T>
+export class Transition<
+  U extends ILexem,
+  T extends ReturnType<typeof from>,
+> implements ITransition<T>
 {
   constructor(private table = {}) {}
+  private atSate: U[] = [];
 
-  public add(fromToState: ReturnType<T['to']>) {
+  public add(...fromToState: ReturnType<T['to']>[]) {
+    const orgState = this.atSate.pop();
     console.log(fromToState);
+    return this;
+  }
+  public at(originState: U) {
+    this.atSate.push(originState);
     return this;
   }
 }
@@ -56,8 +65,13 @@ export const from = <T extends TokenKey, R extends ILexem>(
 
 const transition = new Transition({});
 
-transition.add(
-  from(new IntLexem(/0-9/))
-    .to(TokenType.INT)
-    .to(TokenType.SEMI),
-);
+const intLexem = new IntLexem(/0-9/);
+const semiLexem = new SemiLexem(/;/);
+const symbolLexem = new SymbolLexem(/a-z/);
+
+transition
+  .at(symbolLexem)
+  .add(
+    from(intLexem).to(TokenType.INT),
+    from(semiLexem).to(TokenType.SEMI),
+  );
