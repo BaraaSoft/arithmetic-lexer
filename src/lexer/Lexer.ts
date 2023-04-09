@@ -26,10 +26,20 @@ export class Transition<
 
   public add(...fromToState: ReturnType<T['moveTo']>[]) {
     const orgState = this.atSate.pop();
-    console.log(fromToState);
+    this.table[orgState.tokenClass] = [
+      ...this.table[orgState.tokenClass],
+      ...fromToState.map(({ __lexemToState }) => [
+        __lexemToState.lexem.matchers,
+        __lexemToState.toStates.tokenClass,
+      ]),
+    ];
+
+    console.log(this.table);
     return this;
   }
   public at(originState: U) {
+    if (!this.table[originState.tokenClass])
+      this.table[originState.tokenClass] = [];
     this.atSate.push(originState);
     return this;
   }
@@ -37,7 +47,7 @@ export class Transition<
 
 export interface LexemToStateType<T extends ILexem> {
   lexem: T;
-  toStates: T[];
+  toStates: T;
 }
 export interface FromReturnType<
   T extends LexemToStateType<ILexem>,
@@ -51,11 +61,11 @@ export const isItMatch = <T extends ILexem>(
 ): FromReturnType<LexemToStateType<T>> => {
   let lexemToState: LexemToStateType<T> = {
     lexem,
-    toStates: [],
+    toStates: null,
   };
   return {
     moveTo(toState: T) {
-      lexemToState.toStates.push(toState);
+      lexemToState.toStates = toState;
       return this;
     },
     __lexemToState: lexemToState,
