@@ -18,13 +18,13 @@ export interface ITransition<T> {
 
 export class Transition<
   U extends ILexem,
-  T extends ReturnType<typeof from>,
+  T extends ReturnType<typeof isItMatch>,
 > implements ITransition<T>
 {
   constructor(private table = {}) {}
   private atSate: U[] = [];
 
-  public add(...fromToState: ReturnType<T['to']>[]) {
+  public add(...fromToState: ReturnType<T['moveTo']>[]) {
     const orgState = this.atSate.pop();
     console.log(fromToState);
     return this;
@@ -35,27 +35,26 @@ export class Transition<
   }
 }
 
-export interface LexemToStateType<
-  T extends TokenKey,
-  R extends ILexem,
-> {
-  lexem: R;
+export interface LexemToStateType<T extends ILexem> {
+  lexem: T;
   toStates: T[];
 }
-export interface FromReturnType<LexemToStateType> {
-  to(toState: TokenKey): FromReturnType<LexemToStateType>;
-  __lexemToState: LexemToStateType;
+export interface FromReturnType<
+  T extends LexemToStateType<ILexem>,
+> {
+  moveTo(toState: ILexem): FromReturnType<T>;
+  __lexemToState: T;
 }
 
-export const from = <T extends TokenKey, R extends ILexem>(
-  lexem: R,
-): FromReturnType<LexemToStateType<T, R>> => {
-  let lexemToState: LexemToStateType<T, R> = {
+export const isItMatch = <T extends ILexem>(
+  lexem: T,
+): FromReturnType<LexemToStateType<T>> => {
+  let lexemToState: LexemToStateType<T> = {
     lexem,
     toStates: [],
   };
   return {
-    to(toState: T) {
+    moveTo(toState: T) {
       lexemToState.toStates.push(toState);
       return this;
     },
@@ -72,6 +71,6 @@ const symbolLexem = new SymbolLexem(/a-z/);
 transition
   .at(symbolLexem)
   .add(
-    from(intLexem).to(TokenType.INT),
-    from(semiLexem).to(TokenType.SEMI),
+    isItMatch(intLexem).moveTo(intLexem),
+    isItMatch(semiLexem).moveTo(symbolLexem),
   );
