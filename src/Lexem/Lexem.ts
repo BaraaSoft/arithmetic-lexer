@@ -7,6 +7,12 @@ export class IntLexem implements ILexem {
   constructor(public readonly matchers: RegExp) {}
 }
 
+export class FloatLexem implements ILexem {
+  public readonly tokenClass: TokenClassType = 'FLOAT';
+  public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
+  constructor(public readonly matchers: RegExp) {}
+}
+
 export class SymbolLexem implements ILexem {
   public readonly tokenClass: TokenClassType = 'SYMBOL';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 3;
@@ -21,6 +27,21 @@ export class SemiLexem implements ILexem {
 
 export class EpsilonLexem implements ILexem {
   public readonly tokenClass: TokenClassType = 'EPSILON';
+  public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
+  constructor(public readonly matchers: RegExp) {}
+}
+export class ParenLexem implements ILexem {
+  public readonly tokenClass: TokenClassType = 'PAREN';
+  public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
+  constructor(public readonly matchers: RegExp) {}
+}
+export class OperatorLexem implements ILexem {
+  public readonly tokenClass: TokenClassType = 'OPERATOR';
+  public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
+  constructor(public readonly matchers: RegExp) {}
+}
+export class EqlLexem implements ILexem {
+  public readonly tokenClass: TokenClassType = 'EQL';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
   constructor(public readonly matchers: RegExp) {}
 }
