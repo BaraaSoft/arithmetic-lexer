@@ -4,12 +4,12 @@ import {
   SymbolLexem,
   SemiLexem,
   ILexem,
-} from './Lexem';
+} from '../Lexem';
 import {
   TokenClassType,
   TokenKey,
   TokenType,
-} from './token';
+} from '../Lexem/token';
 
 export interface ITransition<T> {
   add(...fromState: any[]): ITransition<T>;
@@ -71,16 +71,3 @@ export const isItMatch = <T extends ILexem>(
     __lexemToState: lexemToState,
   };
 };
-
-const transition = new Transition({});
-
-const intLexem = new IntLexem(/0-9/);
-const semiLexem = new SemiLexem(/;/);
-const symbolLexem = new SymbolLexem(/a-z/);
-
-transition
-  .at(symbolLexem)
-  .add(
-    isItMatch(intLexem).moveTo(intLexem),
-    isItMatch(semiLexem).moveTo(symbolLexem),
-  );
