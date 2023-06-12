@@ -14,16 +14,37 @@ import {
 } from '../transition';
 
 export interface IMachine<
+  S extends string,
   T extends ITransition<ILexem, T>,
 > {
-  from(fromState: T): IMachine<T>;
+  from(transition: T): IMachine<S, T>;
+  next(inputValue: S): ILexem['tokenClass'];
+  transition?: T;
+  currentState: ILexem['tokenClass'];
+  at(start: ILexem['tokenClass']): void;
 }
 
-export class Machine<T extends ITransition<ILexem, T>>
-  implements IMachine<T>
+export class Machine<
+  S extends string,
+  T extends ITransition<ILexem, T>,
+> implements IMachine<S, T>
 {
-  from(fromState: T): IMachine<T> {
-    throw new Error('Method not implemented.');
+  public currentState: ILexem['tokenClass'];
+  constructor(public transition?: T) {}
+  from(transition: T): IMachine<S, T> {
+    this.transition = transition;
+    return this;
+  }
+  at(start: ILexem['tokenClass']) {
+    this.currentState = start;
+  }
+  next(inputValue: S): ILexem['tokenClass'] {
+    const [, nextState] = this.transition.table[
+      this.currentState
+    ].find(([regex]) => regex.test(inputValue));
+    if (!nextState) throw new StateError();
+    this.currentState = nextState;
+    return nextState;
   }
 }
 
@@ -39,6 +60,7 @@ transition
     isItMatch(intLexem).moveTo(intLexem),
     isItMatch(semiLexem).moveTo(symbolLexem),
   );
-// machine().from()
+// machine.next(input())
 const stateMachine = new Machine();
-stateMachine.from(transition);
+stateMachine.from(transition).at('EPSILON');
+stateMachine.next();
