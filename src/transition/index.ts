@@ -11,40 +11,6 @@ import {
   TokenType,
 } from '../Lexem/token';
 
-export interface ITransition<T> {
-  add(...fromState: any[]): ITransition<T>;
-  at(state: any): ITransition<T>;
-}
-
-export class Transition<
-  U extends ILexem,
-  T extends ReturnType<typeof isItMatch>,
-> implements ITransition<T>
-{
-  constructor(private table = {}) {}
-  private atSate: U[] = [];
-
-  public add(...fromToState: ReturnType<T['moveTo']>[]) {
-    const orgState = this.atSate.pop();
-    this.table[orgState.tokenClass] = [
-      ...this.table[orgState.tokenClass],
-      ...fromToState.map(({ __lexemToState }) => [
-        __lexemToState.lexem.matchers,
-        __lexemToState.toStates.tokenClass,
-      ]),
-    ];
-
-    console.log(this.table);
-    return this;
-  }
-  public at(originState: U) {
-    if (!this.table[originState.tokenClass])
-      this.table[originState.tokenClass] = [];
-    this.atSate.push(originState);
-    return this;
-  }
-}
-
 export interface LexemToStateType<T extends ILexem> {
   lexem: T;
   toStates: T;
@@ -71,6 +37,49 @@ export const isItMatch = <T extends ILexem>(
     __lexemToState: lexemToState,
   };
 };
+export interface ITransition<U extends ILexem, T> {
+  add(...fromState: any[]): ITransition<U, T>;
+  at(state: U): ITransition<U, T>;
+  table:
+    | Record<
+        U['tokenClass'],
+        [U['matchers'], U['tokenClass']][]
+      >
+    | Record<string, never>;
+}
+
+export class Transition<
+  U extends ILexem,
+  T extends ReturnType<typeof isItMatch>,
+> implements ITransition<U, T>
+{
+  constructor(public table = {}) {}
+  private atSate: U[] = [];
+
+  public add(...fromToState: ReturnType<T['moveTo']>[]) {
+    const orgState = this.atSate.pop();
+    this.table[orgState.tokenClass] = [
+      ...this.table[orgState.tokenClass],
+      ...fromToState.map(({ __lexemToState }) => [
+        __lexemToState.lexem.matchers,
+        __lexemToState.toStates.tokenClass,
+      ]),
+    ];
+
+    console.log(this.table);
+    return this;
+  }
+  public at(originState: U) {
+    if (!this.table[originState.tokenClass])
+      this.table[originState.tokenClass] = [];
+    this.atSate.push(originState);
+    return this;
+  }
+
+  public getable() {
+    return this.table;
+  }
+}
 
 const transition = new Transition({});
 
