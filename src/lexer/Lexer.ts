@@ -49,16 +49,16 @@ export interface LexemToStateType<T extends ILexem> {
   lexem: T;
   toStates: T;
 }
-export interface FromReturnType<
+export interface IsItMatchType<
   T extends LexemToStateType<ILexem>,
 > {
-  moveTo(toState: ILexem): FromReturnType<T>;
+  moveTo(toState: ILexem): IsItMatchType<T>;
   __lexemToState: T;
 }
 
 export const isItMatch = <T extends ILexem>(
   lexem: T,
-): FromReturnType<LexemToStateType<T>> => {
+): IsItMatchType<LexemToStateType<T>> => {
   let lexemToState: LexemToStateType<T> = {
     lexem,
     toStates: null,
