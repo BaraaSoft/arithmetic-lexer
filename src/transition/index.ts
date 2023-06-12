@@ -1,10 +1,4 @@
-import {
-  EpsilonLexem,
-  IntLexem,
-  SymbolLexem,
-  SemiLexem,
-  ILexem,
-} from '../Lexem';
+import { ILexem } from '../Lexem';
 import {
   TokenClassType,
   TokenKey,
@@ -80,16 +74,3 @@ export class Transition<
     return this.table;
   }
 }
-
-const transition = new Transition({});
-
-const intLexem = new IntLexem(/0-9/);
-const semiLexem = new SemiLexem(/;/);
-const symbolLexem = new SymbolLexem(/a-z/);
-
-transition
-  .at(symbolLexem)
-  .add(
-    isItMatch(intLexem).moveTo(intLexem),
-    isItMatch(semiLexem).moveTo(symbolLexem),
-  );

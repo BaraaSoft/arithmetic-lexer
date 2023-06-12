@@ -2,16 +2,7 @@ import { StateError } from '../errors';
 import {
   TokenType,
   TokenClassType,
-  IntLexem,
-  SemiLexem,
-  SymbolLexem,
   ILexem,
-  FloatLexem,
-  OperatorLexem,
-  ParenLexem,
-  EqlLexem,
-  EpsilonLexem,
-  GenericLexem,
   EpsilonState,
   IntState,
   FloatState,
@@ -19,8 +10,8 @@ import {
   SymbolState,
   OperatorState,
   ParenState,
-  GenericMatch,
   GenericEvent,
+  EqlState,
 } from '../Lexem';
 import {
   Transition,
@@ -73,7 +64,7 @@ const semiState = new SemiState(/;/);
 const symbolState = new SymbolState(/a-z/);
 const operatorState = new OperatorState(/[+|-|\*|\/]/);
 const parenState = new ParenState(/[\)|\()]/);
-const eqlState = new EpsilonState(/[=]/);
+const eqlState = new EqlState(/[=]/);
 // Generic events only
 const alphanumericMatch = new GenericEvent(/[a-z0-9]/);
 const dotMatch = new GenericEvent(/[.]/);
@@ -91,4 +82,5 @@ transition
   );
 // machine.next(input())
 const stateMachine = new Machine(transition).at('EPSILON');
-stateMachine.next('10');
+console.log(stateMachine.next('10'));
+console.log(stateMachine.next('='));

@@ -1,10 +1,4 @@
-import {
-  EpsilonLexem,
-  IntLexem,
-  SymbolLexem,
-  SemiLexem,
-  ILexem,
-} from '../Lexem';
+import { ILexem } from '../Lexem';
 import {
   TokenClassType,
   TokenKey,
