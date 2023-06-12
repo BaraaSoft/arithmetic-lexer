@@ -1,46 +1,51 @@
 import { ILexem } from './ILexem';
 import { TokenType, TokenClassType } from './token';
 
-export class IntLexem implements ILexem {
+export class GenericEvent implements ILexem {
+  public readonly tokenClass: TokenClassType = 'GENERIC';
+  public readonly tokenKey: (typeof TokenType)[TokenClassType] = 3;
+  constructor(public readonly matchers: RegExp) {}
+}
+export class IntState implements ILexem {
   public readonly tokenClass: TokenClassType = 'INT';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 3;
   constructor(public readonly matchers: RegExp) {}
 }
 
-export class FloatLexem implements ILexem {
+export class FloatState implements ILexem {
   public readonly tokenClass: TokenClassType = 'FLOAT';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
-  constructor(public readonly matchers: RegExp) {}
+  constructor(public readonly matchers?: RegExp) {}
 }
 
-export class SymbolLexem implements ILexem {
+export class SymbolState implements ILexem {
   public readonly tokenClass: TokenClassType = 'SYMBOL';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 3;
   constructor(public readonly matchers: RegExp) {}
 }
 
-export class SemiLexem implements ILexem {
+export class SemiState implements ILexem {
   public readonly tokenClass: TokenClassType = 'SEMI';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 5;
   constructor(public readonly matchers: RegExp) {}
 }
 
-export class EpsilonLexem implements ILexem {
+export class EpsilonState implements ILexem {
   public readonly tokenClass: TokenClassType = 'EPSILON';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
-  constructor(public readonly matchers: RegExp) {}
+  constructor(public readonly matchers?: RegExp) {}
 }
-export class ParenLexem implements ILexem {
+export class ParenState implements ILexem {
   public readonly tokenClass: TokenClassType = 'PAREN';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
   constructor(public readonly matchers: RegExp) {}
 }
-export class OperatorLexem implements ILexem {
+export class OperatorState implements ILexem {
   public readonly tokenClass: TokenClassType = 'OPERATOR';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
   constructor(public readonly matchers: RegExp) {}
 }
-export class EqlLexem implements ILexem {
+export class EqlState implements ILexem {
   public readonly tokenClass: TokenClassType = 'EQL';
   public readonly tokenKey: (typeof TokenType)[TokenClassType] = 0;
   constructor(public readonly matchers: RegExp) {}
