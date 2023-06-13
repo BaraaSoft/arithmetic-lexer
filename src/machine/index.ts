@@ -56,7 +56,7 @@ export class Machine<
 }
 
 const transition = new Transition({});
-// State events
+// State Events. Will correspond to an actual state in the machine (State + Event)
 const epsilonState = new EpsilonState();
 const intState = new IntState(/0-9/);
 const floatState = new FloatState();
@@ -65,19 +65,19 @@ const symbolState = new SymbolState(/a-z/);
 const operatorState = new OperatorState(/[+|-|\*|\/]/);
 const parenState = new ParenState(/[\)|\()]/);
 const eqlState = new EqlState(/[=]/);
-// Generic events only
-const alphanumericMatch = new GenericEvent(/[a-z0-9]/);
-const dotMatch = new GenericEvent(/[.]/);
-const charMatch = new GenericEvent(/[\s*]/);
+// Generic Events. These have no associated state in the machine (Event only)
+const alphanumericEvent = new GenericEvent(/[a-z0-9]/);
+const dotEvent = new GenericEvent(/[.]/);
+const charEvent = new GenericEvent(/[\s*]/);
 transition
   .at(epsilonState)
-  .add(isItMatch(alphanumericMatch).moveTo(symbolState))
+  .add(isItMatch(alphanumericEvent).moveTo(symbolState))
   .at(symbolState)
   .add(
-    isItMatch(alphanumericMatch).moveTo(symbolState),
+    isItMatch(alphanumericEvent).moveTo(symbolState),
     isItMatch(eqlState).moveTo(eqlState),
     isItMatch(parenState).moveTo(parenState),
-    isItMatch(charMatch).moveTo(symbolState),
+    isItMatch(charEvent).moveTo(symbolState),
     isItMatch(operatorState).moveTo(operatorState),
   );
 // machine.next(input())
